@@ -5,6 +5,7 @@ package br.com.academy.ratkovski.Poc.Java.Kafka.Consumer.config;/*
  */
 
 import br.com.academy.ratkovski.Poc.Java.Kafka.Consumer.domain.Post;
+import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -24,18 +25,22 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class KafkaConfiguration {
 
-  public ConsumerFactory<String, Post> consumerFactory() {
+
+  //Consumer properties
+  public ConsumerFactory<String, kafka.avro.Post> consumerFactory() {
       Map<String, Object> config = new HashMap<>();
       config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
       config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
       config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+    config.put(KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://127.0.0.1:8081");
+      //config.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,"");//pode possuir 3 valores *earliest/latest/none
       return new DefaultKafkaConsumerFactory<>(config);
     }
 
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, Post> kafkaListenerContainerFactory() {
-      ConcurrentKafkaListenerContainerFactory<String, Post> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, kafka.avro.Post> kafkaListenerContainerFactory() {
+      ConcurrentKafkaListenerContainerFactory<String, kafka.avro.Post> factory = new ConcurrentKafkaListenerContainerFactory<>();
       factory.setConsumerFactory(consumerFactory());
       return factory;
     }
