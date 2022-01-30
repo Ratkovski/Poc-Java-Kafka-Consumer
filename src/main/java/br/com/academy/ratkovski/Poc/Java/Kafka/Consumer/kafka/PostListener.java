@@ -1,0 +1,22 @@
+package br.com.academy.ratkovski.Poc.Java.Kafka.Consumer.kafka;/*
+ * @created 29/01/2022 - 18:34
+ * @project Poc-Java-Kafka-Consumer
+ * @author Ratkovski
+ */
+
+import lombok.RequiredArgsConstructor;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Component;
+
+@Component
+@RequiredArgsConstructor
+public class PostListener {
+  @KafkaListener(topics = "test_topic", groupId = "groupTest",
+  properties = {"spring.json.value.default.type=br.com.academy.ratkovski.Poc.Java.Kafka.Consumer.domain.User"})
+  public void listener(@NotNull ConsumerRecord<String, Object> consumerRecord) {
+    System.out.println("Message received in group" + consumerRecord.value());
+
+  }
+}
